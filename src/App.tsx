@@ -18,6 +18,13 @@ import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
+import ScanPage from "./pages/Scan/ScanPage";
+
+import ReferenceList from "./pages/References/ReferenceList";
+import OfList from "./pages/OF/OfList";
+import ScanHistory from "./pages/History/ScanHistory";
+
+import ProductionLinesPage from "./pages/ProductionLines/ProductionLinesPage";
 
 export default function App() {
   return (
@@ -28,6 +35,13 @@ export default function App() {
           {/* Dashboard Layout */}
           <Route element={<AppLayout />}>
             <Route index path="/" element={<Home />} />
+
+            {/* GALIA App Routes */}
+            <Route path="/references" element={<ReferenceList />} />
+            <Route path="/of" element={<OfList />} />
+            <Route path="/history" element={<ScanHistory />} />
+            <Route path="/scan" element={<ScanPage />} />
+            <Route path="/production-lines" element={<ProductionLinesPage />} />
 
             {/* Others Page */}
             <Route path="/profile" element={<UserProfiles />} />
@@ -51,6 +65,7 @@ export default function App() {
             {/* Charts */}
             <Route path="/line-chart" element={<LineChart />} />
             <Route path="/bar-chart" element={<BarChart />} />
+            <Route path="/scan" element={<ScanPage />} />
           </Route>
 
           {/* Auth Layout */}
