@@ -1,18 +1,18 @@
-# TailAdmin React - Free React Tailwind Admin Dashboard Template
+# Tescam React - Free React Tailwind Admin Dashboard Template
 
-TailAdmin is a free and open-source admin dashboard template built on **React and Tailwind CSS**, providing developers
+Tescam is a free and open-source admin dashboard template built on **React and Tailwind CSS**, providing developers
 with everything they need to create a comprehensive, data-driven back-end,
 dashboard, or admin panel solution for upcoming web projects.
 
-With TailAdmin, you get access to all the necessary dashboard UI components, elements, and pages required to build a
+With Tescam, you get access to all the necessary dashboard UI components, elements, and pages required to build a
 feature-rich and complete dashboard or admin panel. Whether you're building dashboard or admin panel for a complex web
-application or a simple website, TailAdmin is the perfect solution to help you get up and running quickly.
+application or a simple website, Tescam is the perfect solution to help you get up and running quickly.
 
-![TailAdmin React.js Dashboard Preview](./banner.png)
+![Tescam React.js Dashboard Preview](./banner.png)
 
 ## Overview
 
-TailAdmin provides essential UI components and layouts for building feature-rich, data-driven admin dashboards and
+Tescam provides essential UI components and layouts for building feature-rich, data-driven admin dashboards and
 control panels. It's built on:
 
 - React 19
@@ -21,30 +21,30 @@ control panels. It's built on:
 
 ### Quick Links
 
-- [✨ Visit Website](https://tailadmin.com)
-- [📄 Documentation](https://tailadmin.com/docs)
-- [⬇️ Download](https://tailadmin.com/download)
+- [✨ Visit Website](https://Tescam.com)
+- [📄 Documentation](https://Tescam.com/docs)
+- [⬇️ Download](https://Tescam.com/download)
 - [🖌️ Figma Design File (Community Edition)](https://www.figma.com/community/file/1214477970819985778)
-- [⚡ Get PRO Version](https://tailadmin.com/pricing)
+- [⚡ Get PRO Version](https://Tescam.com/pricing)
 
 ### Demos
 
-- [Free Version](https://free-react-demo.tailadmin.com/)
-- [Pro Version](https://react-demo.tailadmin.com)
+- [Free Version](https://free-react-demo.Tescam.com/)
+- [Pro Version](https://react-demo.Tescam.com)
 
 ### Other Versions
 
-- [HTML Version](https://github.com/TailAdmin/tailadmin-free-tailwind-dashboard-template)
-- [Next.js Version](https://github.com/TailAdmin/free-nextjs-admin-dashboard)
-- [Vue.js Version](https://github.com/TailAdmin/vue-tailwind-admin-dashboard)
-- [Angular Version](https://github.com/TailAdmin/free-angular-tailwind-dashboard)
-- [Laravel Version](https://github.com/TailAdmin/tailadmin-laravel)
+- [HTML Version](https://github.com/Tescam/Tescam-free-tailwind-dashboard-template)
+- [Next.js Version](https://github.com/Tescam/free-nextjs-admin-dashboard)
+- [Vue.js Version](https://github.com/Tescam/vue-tailwind-admin-dashboard)
+- [Angular Version](https://github.com/Tescam/free-angular-tailwind-dashboard)
+- [Laravel Version](https://github.com/Tescam/Tescam-laravel)
 
 ## Installation
 
 ### Prerequisites
 
-To get started with TailAdmin, ensure you have the following prerequisites installed and set up:
+To get started with Tescam, ensure you have the following prerequisites installed and set up:
 
 - Node.js 18.x or later (recommended to use Node.js 20.x or later)
 
@@ -53,7 +53,7 @@ To get started with TailAdmin, ensure you have the following prerequisites insta
 Clone the repository using the following command:
 
 ```bash
-git clone https://github.com/TailAdmin/free-react-tailwind-admin-dashboard.git
+git clone https://github.com/Tescam/free-react-tailwind-admin-dashboard.git
 ```
 
 > Windows Users: place the repository near the root of your drive if you face issues while cloning.
@@ -75,7 +75,7 @@ git clone https://github.com/TailAdmin/free-react-tailwind-admin-dashboard.git
 
 ## Components
 
-TailAdmin is a pre-designed starting point for building a web-based dashboard using React.js and Tailwind CSS. The
+Tescam is a pre-designed starting point for building a web-based dashboard using React.js and Tailwind CSS. The
 template includes:
 
 - Sophisticated and accessible sidebar
@@ -106,7 +106,7 @@ All components are built with React and styled using Tailwind CSS for easy custo
 - Complete Figma design file
 - Email support
 
-To learn more about pro version features and pricing, visit our [pricing page](https://tailadmin.com/pricing).
+To learn more about pro version features and pricing, visit our [pricing page](https://Tescam.com/pricing).
 
 ## Changelog
 
@@ -160,7 +160,7 @@ A major update with comprehensive redesign and modern React patterns implementat
 - Migrated charts to ApexCharts
 - Revised authentication system
 
-[Read more](https://tailadmin.com/docs/update-logs/react) on this release.
+[Read more](https://Tescam.com/docs/update-logs/react) on this release.
 
 ### Version 1.3.7 - [June 20, 2024]
 
@@ -181,15 +181,15 @@ A major update with comprehensive redesign and modern React patterns implementat
 
 ### Version 1.2.0 - [Apr 28, 2023]
 
-- Add Typescript in TailAdmin React.
+- Add Typescript in Tescam React.
 
 ### Version 1.0.0 - Initial Release - [Mar 13, 2023]
 
-- Initial release of TailAdmin React.
+- Initial release of Tescam React.
 
 ## License
 
-TailAdmin React.js Free Version is released under the MIT License.
+Tescam React.js Free Version is released under the MIT License.
 
 ## Support
 
