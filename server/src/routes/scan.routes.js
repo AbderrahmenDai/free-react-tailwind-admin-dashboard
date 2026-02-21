@@ -7,5 +7,6 @@ const { authenticateToken } = require("../middleware/auth.middleware");
 router.post("/process", authenticateToken, scanController.processScan);
 router.get("/status/:ofId", authenticateToken, scanController.getScanStatus);
 router.get("/history", authenticateToken, scanController.getHistory);
+router.post("/verify", authenticateToken, scanController.verifyScan);
 
 module.exports = router;

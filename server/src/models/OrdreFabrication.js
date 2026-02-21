@@ -30,6 +30,22 @@ const OrdreFabrication = sequelize.define("OrdreFabrication", {
     defaultValue: "EN_COURS",
     allowNull: false,
   },
+  whN: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  pkgInstr: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  objectKey: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  ob: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   // Foreign Keys: referenceId, createdBy will be handled via associations
 });
 

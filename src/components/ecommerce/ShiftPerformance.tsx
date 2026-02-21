@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { dashboardApi, DashboardStats } from '../../services/dashboardService';
 
-const ShiftCard = ({ shift, time, efficiency, production, icon, color }: any) => {
-    const isHigh = efficiency >= 90;
-    const isMed = efficiency >= 80 && efficiency < 90;
+const ShiftCard = ({ shift, time, efficiency, production, objective, icon, color }: any) => {
+    // Determine status color based on efficiency
+    let statusColor = 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
+    let progressBarColor = 'bg-red-500';
+
+    if (efficiency >= 90) {
+        statusColor = 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
+        progressBarColor = 'bg-green-500';
+    } else if (efficiency >= 80) {
+        statusColor = 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400';
+        progressBarColor = 'bg-yellow-500';
+    }
+
+    const percentage = Math.min((production / (objective || 1)) * 100, 100);
 
     return (
         <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-5 border border-gray-100 dark:border-gray-700 relative overflow-hidden group hover:shadow-md transition-all duration-300">
@@ -15,7 +27,7 @@ const ShiftCard = ({ shift, time, efficiency, production, icon, color }: any) =>
                     <h4 className="font-bold text-gray-800 dark:text-white text-lg">{shift}</h4>
                     <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{time}</span>
                 </div>
-                <div className={`px-3 py-1 rounded-full text-xs font-bold ${isHigh ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : isMed ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}>
+                <div className={`px-3 py-1 rounded-full text-xs font-bold ${statusColor}`}>
                     {efficiency}% Eff.
                 </div>
             </div>
@@ -24,12 +36,12 @@ const ShiftCard = ({ shift, time, efficiency, production, icon, color }: any) =>
                 <div>
                     <div className="flex justify-between text-sm mb-1">
                         <span className="text-gray-500 dark:text-gray-400">Objectif</span>
-                        <span className="font-bold text-gray-900 dark:text-white">1200</span>
+                        <span className="font-bold text-gray-900 dark:text-white">{objective}</span>
                     </div>
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                         <div
-                            className={`h-2 rounded-full ${isHigh ? 'bg-green-500' : isMed ? 'bg-yellow-500' : 'bg-red-500'}`}
-                            style={{ width: `${(production / 1200) * 100}%` }}
+                            className={`h-2 rounded-full ${progressBarColor}`}
+                            style={{ width: `${percentage}%` }}
                         ></div>
                     </div>
                 </div>
@@ -44,6 +56,33 @@ const ShiftCard = ({ shift, time, efficiency, production, icon, color }: any) =>
 };
 
 export default function ShiftPerformance() {
+    const [stats, setStats] = useState<DashboardStats | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const data = await dashboardApi.getStats();
+                setStats(data);
+            } catch (error) {
+                console.error("Failed to fetch dashboard stats", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchStats();
+    }, []);
+
+    if (loading) return <div className="col-span-12 p-6 text-center">Chargement des statistiques...</div>;
+
+    const getShiftData = (name: string) => {
+        return stats?.shifts.find(s => s.name === name) || { production: 0, objective: 0, efficiency: 0, range: "" };
+    };
+
+    const matin = getShiftData("Matin");
+    const pm = getShiftData("Après-midi");
+    const nuit = getShiftData("Nuit");
+
     return (
         <div className="col-span-12 rounded-2xl border border-gray-200 bg-white p-6 shadow-default dark:border-gray-800 dark:bg-gray-900 xl:col-span-12">
             <div className="mb-6 flex items-center justify-between">
@@ -57,17 +96,16 @@ export default function ShiftPerformance() {
                 </div>
                 <select className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
                     <option>Aujourd'hui</option>
-                    <option>Hier</option>
-                    <option>Cette Semaine</option>
                 </select>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <ShiftCard
                     shift="Matin"
-                    time="06:00 - 14:00"
-                    efficiency={94}
-                    production={1150}
+                    time={matin.range || "06:00 - 14:00"}
+                    efficiency={matin.efficiency}
+                    production={matin.production}
+                    objective={matin.objective}
                     color="text-orange-500"
                     icon={
                         <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
@@ -77,9 +115,10 @@ export default function ShiftPerformance() {
                 />
                 <ShiftCard
                     shift="Après-midi"
-                    time="14:00 - 22:00"
-                    efficiency={87}
-                    production={890}
+                    time={pm.range || "14:00 - 22:00"}
+                    efficiency={pm.efficiency}
+                    production={pm.production}
+                    objective={pm.objective}
                     color="text-blue-500"
                     icon={
                         <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
@@ -89,9 +128,10 @@ export default function ShiftPerformance() {
                 />
                 <ShiftCard
                     shift="Nuit"
-                    time="22:00 - 06:00"
-                    efficiency={55}
-                    production={210}
+                    time={nuit.range || "22:00 - 06:00"}
+                    efficiency={nuit.efficiency}
+                    production={nuit.production}
+                    objective={nuit.objective}
                     color="text-indigo-500"
                     icon={
                         <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">

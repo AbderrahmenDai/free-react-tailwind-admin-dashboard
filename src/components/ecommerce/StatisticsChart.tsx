@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import flatpickr from "flatpickr";
 import ChartTab from "../common/ChartTab";
 import { CalenderIcon } from "../../icons";
+import { dashboardApi } from "../../services/dashboardService";
 
 export default function StatisticsChart() {
   const datePickerRef = useRef<HTMLInputElement>(null);
@@ -133,25 +134,39 @@ export default function StatisticsChart() {
     },
   };
 
-  const series = [
+  const [series, setSeries] = useState([
     {
-      name: "Sales",
-      data: [180, 190, 170, 160, 175, 165, 170, 205, 230, 210, 240, 235],
+      name: "Production",
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     },
     {
-      name: "Revenue",
-      data: [40, 30, 50, 40, 55, 40, 70, 100, 110, 120, 150, 140],
+      name: "Rebuts",
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     },
-  ];
+  ]);
+
+  useEffect(() => {
+    // Fetch mocks
+    const fetchStats = async () => {
+      try {
+        const data: any = await dashboardApi.getStats();
+        if (data.monthly && data.monthly.series) {
+          setSeries(data.monthly.series);
+        }
+      } catch (e) { console.error(e); }
+    };
+    fetchStats();
+  }, []);
+
   return (
     <div className="rounded-2xl border border-gray-200 bg-white px-5 pb-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
       <div className="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
         <div className="w-full">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            Statistics
+            Production Annuelle
           </h3>
           <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-            Target you've set for each month
+            Aperçu de la production et des rebuts par mois
           </p>
         </div>
         <div className="flex items-center gap-3 sm:justify-end">

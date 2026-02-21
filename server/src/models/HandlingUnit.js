@@ -42,6 +42,23 @@ const HandlingUnit = sequelize.define("HandlingUnit", {
     defaultValue: "CONFORME",
     allowNull: false,
   },
+  idType: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  createdUser: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  changedUser: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  compteurHU: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    comment: "Cumulative HU index within its OF — used as last 4 digits of composite barcode",
+  },
   // Foreign Keys: ordreFabricationId, scannePar (User FK)
 });
 

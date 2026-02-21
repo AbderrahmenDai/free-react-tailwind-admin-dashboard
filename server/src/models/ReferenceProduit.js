@@ -32,6 +32,74 @@ const ReferenceProduit = sequelize.define("ReferenceProduit", {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  referenceClient: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  version: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  projet: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  referenceClientIndice: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  codeProjet: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  airbagProgramm: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  planificateurDeCode: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  partNumber: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  compteur: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
+  shortDescriptionForLabel: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  orientation: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  tempsDeGamme: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  colisage: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
+  descriptionProjet: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  couleurImpression: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  refClientD2: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  refInterneD2: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   actif: {
     type: DataTypes.BOOLEAN,
     defaultValue: true,

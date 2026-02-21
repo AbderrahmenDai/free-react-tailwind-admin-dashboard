@@ -34,7 +34,7 @@ exports.getOFById = async (req, res) => {
 exports.createOF = async (req, res) => {
   const t = await sequelize.transaction();
   try {
-    const { numeroOF, referenceId, quantiteTotale } = req.body;
+    const { numeroOF, referenceId, quantiteTotale, whN, pkgInstr, ob, objectKey } = req.body;
     
     // Validate Reference
     const ref = await ReferenceProduit.findByPk(referenceId, { transaction: t });
@@ -47,7 +47,11 @@ exports.createOF = async (req, res) => {
       numeroOF,
       referenceId,
       quantiteTotale,
-      createdBy: req.user.id
+      createdBy: req.user.id,
+      whN,
+      pkgInstr,
+      ob,
+      objectKey
     }, { transaction: t });
 
     // Optional: Auto-generate HUs if logic dictates (not specified in doc explicitly but implied by 'bulk')
@@ -55,6 +59,60 @@ exports.createOF = async (req, res) => {
 
     await t.commit();
     res.status(201).json(of);
+  } catch (error) {
+    await t.rollback();
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+};
+
+exports.updateOF = async (req, res) => {
+  const t = await sequelize.transaction();
+  try {
+    const { numeroOF, referenceId, quantiteTotale, statut, whN, pkgInstr, ob, objectKey } = req.body;
+    const of = await OrdreFabrication.findByPk(req.params.id, { transaction: t });
+    
+    if (!of) {
+      await t.rollback();
+      return res.status(404).json({ message: "OF non trouvé" });
+    }
+
+    await of.update({
+      numeroOF,
+      referenceId,
+      quantiteTotale, // Note: Changing this might affect HU validation logic if HUs exist
+      statut,
+      whN,
+      pkgInstr,
+      ob,
+      objectKey
+    }, { transaction: t });
+
+    await t.commit();
+    res.json(of);
+  } catch (error) {
+    await t.rollback();
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+};
+
+exports.deleteOF = async (req, res) => {
+  const t = await sequelize.transaction();
+  try {
+    const of = await OrdreFabrication.findByPk(req.params.id, { transaction: t });
+    
+    if (!of) {
+      await t.rollback();
+      return res.status(404).json({ message: "OF non trouvé" });
+    }
+
+    // Optional: Check if HUs exist and block delete or cascade
+    // For now, let's assume we can delete if status allows or just force delete
+    // We should delete associated HUs first to be safe if cascade isn't set up
+    await HandlingUnit.destroy({ where: { ordreFabricationId: of.id }, transaction: t });
+    await of.destroy({ transaction: t });
+
+    await t.commit();
+    res.json({ message: "OF supprimé avec succès" });
   } catch (error) {
     await t.rollback();
     res.status(500).json({ message: "Erreur serveur", error: error.message });

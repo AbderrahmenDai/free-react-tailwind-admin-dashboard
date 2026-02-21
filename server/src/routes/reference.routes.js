@@ -6,8 +6,8 @@ const { authenticateToken, authorize } = require("../middleware/auth.middleware"
 // Routes
 router.get("/", authenticateToken, referenceController.getAllReferences);
 router.get("/:id", authenticateToken, referenceController.getReferenceById);
-router.post("/", authenticateToken, authorize("admin", "manager"), referenceController.createReference);
-router.put("/:id", authenticateToken, authorize("admin", "manager"), referenceController.updateReference);
-router.delete("/:id", authenticateToken, authorize("admin"), referenceController.deleteReference);
+router.post("/", authenticateToken, authorize("ADMIN", "SUPERVISOR"), referenceController.createReference);
+router.put("/:id", authenticateToken, authorize("ADMIN", "SUPERVISOR"), referenceController.updateReference);
+router.delete("/:id", authenticateToken, authorize("ADMIN"), referenceController.deleteReference);
 
 module.exports = router;

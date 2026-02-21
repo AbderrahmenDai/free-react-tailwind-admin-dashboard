@@ -2,8 +2,15 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../models");
 
 const authenticateToken = async (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+  // Accept token from HttpOnly cookie OR Authorization Bearer header
+  let token = req.cookies?.token;
+
+  if (!token) {
+    const authHeader = req.headers["authorization"];
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.substring(7);
+    }
+  }
 
   if (!token) return res.sendStatus(401);
 

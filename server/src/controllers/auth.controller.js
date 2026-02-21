@@ -42,9 +42,10 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ where: { email } });
+    const { username, password } = req.body;
+    
+    // Check if user exists by username
+    const user = await User.findOne({ where: { username } });
     if (!user) return res.status(401).json({ message: "Identifiants invalides" });
 
     const isValid = await bcrypt.compare(password, user.password);
@@ -54,8 +55,17 @@ exports.login = async (req, res) => {
 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "8h" });
 
+    // Set HttpOnly cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Set to true in prod
+      sameSite: "strict",
+      maxAge: 8 * 60 * 60 * 1000 // 8 hours
+    });
+
     res.json({
       message: "Connexion réussie",
+      token,
       user: {
         id: user.id,
         username: user.username,
@@ -63,8 +73,7 @@ exports.login = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         role: user.role,
-      },
-      token,
+      }
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -83,4 +92,9 @@ exports.me = async (req, res) => {
       role: req.user.role,
     },
   });
+};
+
+exports.logout = (req, res) => {
+  res.clearCookie("token");
+  res.json({ message: "Déconnexion réussie" });
 };

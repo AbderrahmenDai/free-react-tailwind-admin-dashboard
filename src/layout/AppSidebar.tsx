@@ -1,96 +1,95 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 
-// Assume these icons are imported from an icon library
 import {
   BoxCubeIcon,
-  CalenderIcon,
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
   ListIcon,
-  PageIcon,
-  PieChartIcon,
-  PlugInIcon,
-  TableIcon,
   UserCircleIcon,
+  UserIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
+import { useAuth, UserRole } from "../context/AuthContext";
 import SidebarWidget from "./SidebarWidget";
 
 type NavItem = {
   name: string;
   icon: React.ReactNode;
   path?: string;
-  subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
+  /** Roles allowed to see this item. Omit to allow all authenticated users. */
+  roles?: UserRole[];
+  subItems?: { name: string; path: string; pro?: boolean; new?: boolean; roles?: UserRole[] }[];
 };
 
-const navItems: NavItem[] = [
+/** Full nav definition — roles control visibility */
+const allNavItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+    subItems: [{ name: "Dashboard", path: "/" }],
   },
   {
     icon: <BoxCubeIcon />,
     name: "Production",
     subItems: [
-      { name: "Ordres de Fab.", path: "/of", pro: false },
-      { name: "Scanner", path: "/scan", pro: false },
-      { name: "Lignes de Prod.", path: "/production-lines", pro: false },
-      { name: "Historique", path: "/history", pro: false },
+      { name: "Ordres de Fab.", path: "/of", roles: ["ADMIN", "METHODE", "SUPERVISEUR", "SUPERVISOR"] },
+      { name: "Scanner", path: "/scan" }, // all roles
+      { name: "Lignes de Prod.", path: "/production-lines", roles: ["ADMIN", "METHODE", "SUPERVISEUR", "SUPERVISOR"] },
+      { name: "Historique", path: "/history" }, // all roles
     ],
   },
   {
     icon: <ListIcon />,
     name: "Références",
     path: "/references",
+    roles: ["ADMIN", "METHODE", "SUPERVISEUR", "SUPERVISOR"],
   },
-
   {
     icon: <UserCircleIcon />,
-    name: "User Profile",
+    name: "Moi",
     path: "/profile",
-  },
-
-
-
-];
-
-const othersItems: NavItem[] = [
-  {
-    icon: <PieChartIcon />,
-    name: "Charts",
-    subItems: [
-      { name: "Line Chart", path: "/line-chart", pro: false },
-      { name: "Bar Chart", path: "/bar-chart", pro: false },
-    ],
+    // all roles
   },
   {
-    icon: <PageIcon />,
-    name: "Pages",
-    subItems: [
-      { name: "Blank Page", path: "/blank", pro: false },
-      { name: "Error 404", path: "/error-404", pro: false },
-    ],
+    icon: <UserIcon />,
+    name: "Gestion Utilisateurs",
+    path: "/users",
+    roles: ["ADMIN"],
   },
 ];
-
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
+  const { user } = useAuth();
 
+  // Filter nav items by user role
+  const navItems: NavItem[] = allNavItems
+    .map((item) => {
+      // Filter sub-items
+      if (item.subItems) {
+        const filteredSubs = item.subItems.filter(
+          (sub) => !sub.roles || (user && sub.roles.includes(user.role))
+        );
+        if (filteredSubs.length === 0) return null;
+        return { ...item, subItems: filteredSubs };
+      }
+      // Filter top-level items
+      if (item.roles && (!user || !item.roles.includes(user.role))) return null;
+      return item;
+    })
+    .filter(Boolean) as NavItem[];
+
+  // Default: keep "Production" (index 1) open
   const [openSubmenu, setOpenSubmenu] = useState<{
     type: "main" | "others";
     index: number;
-  } | null>(null);
-  const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
-    {}
-  );
+  } | null>({ type: "main", index: 1 });
+  const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>({});
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  // const isActive = (path: string) => location.pathname === path;
   const isActive = useCallback(
     (path: string) => location.pathname === path,
     [location.pathname]
@@ -98,25 +97,18 @@ const AppSidebar: React.FC = () => {
 
   useEffect(() => {
     let submenuMatched = false;
-    ["main", "others"].forEach((menuType) => {
-      const items = menuType === "main" ? navItems : othersItems;
-      items.forEach((nav, index) => {
-        if (nav.subItems) {
-          nav.subItems.forEach((subItem) => {
-            if (isActive(subItem.path)) {
-              setOpenSubmenu({
-                type: menuType as "main" | "others",
-                index,
-              });
-              submenuMatched = true;
-            }
-          });
-        }
-      });
+    navItems.forEach((nav, index) => {
+      if (nav.subItems) {
+        nav.subItems.forEach((subItem) => {
+          if (isActive(subItem.path)) {
+            setOpenSubmenu({ type: "main", index });
+            submenuMatched = true;
+          }
+        });
+      }
     });
-
     if (!submenuMatched) {
-      setOpenSubmenu(null);
+      setOpenSubmenu({ type: "main", index: 1 });
     }
   }, [location, isActive]);
 
@@ -279,23 +271,12 @@ const AppSidebar: React.FC = () => {
       >
         <Link to="/">
           {isExpanded || isHovered || isMobileOpen ? (
-            <>
-              <img
-                className="dark:hidden"
-
-                alt="Logo"
-                width={150}
-                height={40}
-              />
-
-            </>
+            <div className="flex items-center gap-2">
+              <div className="bg-brand-600 text-white p-1 rounded font-bold text-xl">TT</div>
+              <span className="text-xl font-bold text-gray-800 dark:text-white">Tescam Tesca</span>
+            </div>
           ) : (
-            <img
-              src="/images/logo/logo-icon.svg"
-              alt="Logo"
-              width={32}
-              height={32}
-            />
+            <div className="bg-brand-600 text-white p-1 rounded font-bold text-xl w-8 h-8 flex items-center justify-center">TT</div>
           )}
         </Link>
       </div>
@@ -316,21 +297,6 @@ const AppSidebar: React.FC = () => {
                 )}
               </h2>
               {renderMenuItems(navItems, "main")}
-            </div>
-            <div className="">
-              <h2
-                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered
-                  ? "lg:justify-center"
-                  : "justify-start"
-                  }`}
-              >
-                {isExpanded || isHovered || isMobileOpen ? (
-                  "Others"
-                ) : (
-                  <HorizontaLDots />
-                )}
-              </h2>
-              {renderMenuItems(othersItems, "others")}
             </div>
           </div>
         </nav>

@@ -17,7 +17,7 @@ const ProductionLine = sequelize.define("ProductionLine", {
     allowNull: false,
   },
   type: {
-    type: DataTypes.ENUM('FSB', 'RSC', 'RSB', 'FSC'),
+    type: DataTypes.ENUM('FSB', 'RSC', 'RSB', 'FSC', 'D34'),
     allowNull: false,
   },
   statut: {
@@ -27,6 +27,16 @@ const ProductionLine = sequelize.define("ProductionLine", {
   efficacite: {
     type: DataTypes.FLOAT, // 0-100
     defaultValue: 0,
+  },
+  cadence: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    comment: "Pièces par heure"
+  },
+  objectif: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    comment: "Objectif par poste"
   }
 });
 

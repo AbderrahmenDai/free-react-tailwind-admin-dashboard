@@ -1,7 +1,15 @@
 import api from './api';
 
+export interface VerifyResult {
+  ok: boolean;
+  step: string;
+  message: string;
+  code?: string;
+  data?: Record<string, unknown>;
+}
+
 export const scanApi = {
-  processScan: async (ordreFabricationId: string, galiaData: any, forceValidation = false, justification = '') => {
+  processScan: async (ordreFabricationId: string, galiaData: unknown, forceValidation = false, justification = '') => {
     const response = await api.post('/scan/process', {
       ordreFabricationId,
       galiaData,
@@ -10,7 +18,16 @@ export const scanApi = {
     });
     return response.data;
   },
-  
+
+  verifyScan: async (
+    step: 'reference' | 'of' | 'hu',
+    value: string,
+    context?: { refCode?: string; ofNumero?: string; ofId?: string }
+  ): Promise<VerifyResult> => {
+    const response = await api.post('/scan/verify', { step, value, ...context });
+    return response.data;
+  },
+
   getScanStatus: async (ofId: string) => {
     const response = await api.get(`/scan/status/${ofId}`);
     return response.data;

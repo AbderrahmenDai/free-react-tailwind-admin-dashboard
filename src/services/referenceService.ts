@@ -8,6 +8,23 @@ export interface ReferenceProduit {
   referenceInterne?: string;
   uniteMesure: string;
   familleProduit?: string;
+  referenceClient?: string;
+  version?: string;
+  projet?: string;
+  referenceClientIndice?: string;
+  codeProjet?: string;
+  airbagProgramm?: string;
+  planificateurDeCode?: string;
+  partNumber?: string;
+  compteur?: number;
+  shortDescriptionForLabel?: string;
+  orientation?: string;
+  tempsDeGamme?: string;
+  colisage?: number;
+  descriptionProjet?: string;
+  couleurImpression?: string;
+  refClientD2?: string;
+  refInterneD2?: string;
   createdAt?: string;
 }
 
@@ -32,4 +49,20 @@ export const referenceApi = {
     const response = await api.delete(`/references/${id}`);
     return response.data;
   },
+  importTemplate: async () => {
+    const response = await api.get("/import/references/template", { responseType: 'blob' });
+    return response.data;
+  },
+  previewImport: async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await api.post("/import/references/preview", formData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    });
+    return response.data;
+  },
+  confirmImport: async (data: any[]) => {
+    const response = await api.post("/import/references/confirm", { data });
+    return response.data;
+  }
 };
